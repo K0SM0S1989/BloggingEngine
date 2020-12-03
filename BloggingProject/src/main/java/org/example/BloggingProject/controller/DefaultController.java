@@ -1,4 +1,4 @@
-package org.example.BloggingPriject.controller;
+package org.example.BloggingProject.controller;
 
 
 
