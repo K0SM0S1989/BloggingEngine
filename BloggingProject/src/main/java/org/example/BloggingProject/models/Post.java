@@ -1,10 +1,12 @@
 package org.example.BloggingProject.models;
 
 import lombok.Data;
+
 import org.example.BloggingProject.enums.ModerationStatus;
 
 import javax.persistence.*;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -12,7 +14,7 @@ import java.util.List;
 @Table(name = "posts")
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "is_active", nullable = false)
@@ -33,13 +35,14 @@ public class Post {
     private User userId;
 
     @Column(nullable = false)
-    private Date time;
+    private LocalDateTime time;
 
     @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
     private String text;
+
 
     @Column(name = "view_count", nullable = false)
     private int viewCount;

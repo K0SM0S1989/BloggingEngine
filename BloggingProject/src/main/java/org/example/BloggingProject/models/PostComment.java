@@ -3,6 +3,7 @@ package org.example.BloggingProject.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 @Data
 public class PostComment {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
@@ -27,7 +28,7 @@ public class PostComment {
     private User userId;
 
     @Column(nullable = false)
-    private Date time;
+    private LocalDateTime time;
 
     @Column(nullable = false)
     private String text;
