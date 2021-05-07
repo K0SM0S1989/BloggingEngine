@@ -3,8 +3,6 @@ package org.example.BloggingProject.models;
 
 import lombok.Data;
 import org.example.BloggingProject.enums.Role;
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.*;
@@ -12,7 +10,7 @@ import java.util.*;
 @Entity
 @Data
 @Table(name = "users")
-public class User{
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -37,20 +35,6 @@ public class User{
 
     private String photo;
 
-
-//    @Enumerated(EnumType.STRING)
-//    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-//    @CollectionTable(name = "roles")
-//    Set<Role> roles = new HashSet<>();
-//
-//    public void setRoles() {
-//        Set<Role> roles;
-//        if (isModerator == 0) {
-//            roles = Collections.singleton(Role.USER);
-//        }else  roles = Collections.singleton(Role.MODERATOR);
-//        this.roles = roles;
-//    }
-
     @OneToMany(targetEntity = Post.class, mappedBy = "userId")
     private List<Post> postListUser;
 
@@ -63,36 +47,15 @@ public class User{
     @OneToMany(targetEntity = PostComment.class, mappedBy = "userId")
     private List<PostComment> postCommentList;
 
-
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return getRoles();
-//    }
-//
-//    @Override
-//    public String getUsername() {
-//        return name;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonExpired() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonLocked() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isCredentialsNonExpired() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isEnabled() {
-//        return true;
-//    }
+//    @Enumerated(EnumType.STRING)
+//    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+//    @CollectionTable(name = "roles")
+//    private Set<Role> roles = new HashSet<>();
 
 
+    public Set<Role> getRoles() {
+        Set<Role> roles = new HashSet<>();
+        roles.add(isModerator == 1 ? Role.MODERATOR : Role.USER);
+        return roles;
+    }
 }

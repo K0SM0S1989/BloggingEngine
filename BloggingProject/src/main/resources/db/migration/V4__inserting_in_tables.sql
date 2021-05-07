@@ -15,7 +15,7 @@ values (1, 'Текст поста бла бла бла', CURRENT_TIMESTAMP, 'З�
 2, 1, 2);
 
 insert into posts (is_active, moderation_status, text, time, title, view_count, moderator_id, user_id)
-values (1, 'ACCEPTED', 'Текст второго поста, очень длинный и должен быть более десяти слов так что пишем', CURRENT_TIMESTAMP, 'Заголовок второго поста',
+values (1, 'ACCEPTED', 'Текст второго поста, очень длинный и должен быть более десяти слов так что пишем',  LOCALTIMESTAMP, 'Заголовок второго поста',
 2, 1, 2);
 
 insert into posts (is_active, moderation_status, text, time, title, view_count, moderator_id, user_id)

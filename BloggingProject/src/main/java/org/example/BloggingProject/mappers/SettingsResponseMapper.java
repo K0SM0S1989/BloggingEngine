@@ -10,12 +10,16 @@ public class SettingsResponseMapper {
         globalSettings.forEach(globSet -> {
             boolean value = false;
             if (globSet.getValue().equals("YES")) value = true;
-            if (globSet.getCode().equals("MULTIUSER_MODE")) {
-                settingsResponse.setMultiuserMode(value);
-            } else if (globSet.getCode().equals("POST_PREMODERATION")) {
-                settingsResponse.setPostPremoderation(value);
-            } else if (globSet.getCode().equals("STATISTICS_IS_PUBLIC")) {
-                settingsResponse.setStatisticsIsPublic(value);
+            switch (globSet.getCode()) {
+                case "MULTIUSER_MODE":
+                    settingsResponse.setMultiuserMode(value);
+                    break;
+                case "POST_PREMODERATION":
+                    settingsResponse.setPostPremoderation(value);
+                    break;
+                case "STATISTICS_IS_PUBLIC":
+                    settingsResponse.setStatisticsIsPublic(value);
+                    break;
             }
         });
 

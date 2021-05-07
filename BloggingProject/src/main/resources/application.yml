@@ -1,11 +1,16 @@
-spring.datasource.url: jdbc:mysql://localhost:3306/db_blogger?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
-spring.datasource.username: springuser
-spring.datasource.password: 12345
-#spring.jpa.hibernate.ddl-auto: update
-spring.jpa.generate-ddl: true
+#spring.datasource.url: jdbc:mysql://localhost:3306/db_blogger?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+#spring.datasource.username: springuser
+#spring.datasource.password: 12345
+#spring.jpa.hibernate.ddl-auto: create
+#spring.jpa.generate-ddl: true
 #spring.jpa.show-sql: true
 spring.flyway.baselineOnMigrate: true
 
+
+spring.datasource.url: jdbc:postgresql://localhost/db_blogger
+spring.datasource.username: springuser
+spring.datasource.password: 12345
+#spring.jpa.generate-ddl: true
 
 blog.title: DevPub
 blog.subtitle: Рассказы разработчиков
@@ -13,6 +18,13 @@ blog.phone: +7 906 666-44-55
 blog.email: mail@mail.ru
 blog.copyright: Михаил Артамохин
 blog.copyrightFrom: 2020
+
+date.mili2second: 1000
+
+announce.suka:
+  start: 0
+  finish: 150
+  divide: 3
 
 upload.path: /home/kosmos/ProgSchool/diploma/BloggingEngine/BloggingProject/uploads
 

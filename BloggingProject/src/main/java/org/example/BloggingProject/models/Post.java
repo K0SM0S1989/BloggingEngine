@@ -22,8 +22,7 @@ public class Post {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "moderation_status",
-            nullable = false,
-            columnDefinition = "enum('NEW','ACCEPTED','DECLINED') default 'NEW'")
+            nullable = false)
     private ModerationStatus moderationStatus;
 
     @ManyToOne

@@ -1,13 +1,13 @@
 package org.example.BloggingProject.enums;
 
-//import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 
-public enum Role{
+public enum Role implements GrantedAuthority{
     USER,
     MODERATOR;
 
-//    @Override
-//    public String getAuthority() {
-//        return name();
-//    }
+    @Override
+    public String getAuthority() {
+        return name();
+    }
 }

@@ -1,16 +1,11 @@
 package org.example.BloggingProject.controllers;
 
 
-import lombok.SneakyThrows;
-import org.example.BloggingProject.exceptions.BadRequestException;
-import org.example.BloggingProject.models.User;
-import org.example.BloggingProject.repository.UserRepository;
 import org.example.BloggingProject.response.InitResponse;
 import org.example.BloggingProject.response.SettingsResponse;
-import org.example.BloggingProject.serv.GlobalSettingsService;
-import org.example.BloggingProject.serv.UserService;
+import org.example.BloggingProject.service.GlobalSettingsService;
+import org.example.BloggingProject.service.UserService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
