@@ -9,6 +9,7 @@ public class StaticMethodsAndFields {
 public static final int START_SYMBOL_ANNOUNCE = 0;
 public static final int FINISH_SYMBOL_ANNOUNCE = 150;
 public static final int DIVIDE_SHORT_TEXT = 3;
+public static final int MILLISECOND_TO_SECOND = 1000;
 
 
     public static void likeDisCount(Post post, int[] likeCount, int[] dislikeCount){

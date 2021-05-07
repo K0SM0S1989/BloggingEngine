@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ShortTextAndTitle implements ErrorsData {
+public class ShortTextAndTitle {
     private String text;
     private String title;
 

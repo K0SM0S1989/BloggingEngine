@@ -3,6 +3,7 @@ package org.example.BloggingProject.response.comment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.BloggingProject.main.StaticMethodsAndFields;
 import org.example.BloggingProject.models.PostComment;
 import org.example.BloggingProject.response.users.UserCommentData;
 
@@ -22,9 +23,9 @@ public class CommentData {
 
     private UserCommentData user;
 
-    public CommentData(PostComment postComment){
+    public CommentData(PostComment postComment) {
         id = postComment.getId();
-        timestamp = Timestamp.valueOf(postComment.getTime()).getTime()/1000;
+        timestamp = Timestamp.valueOf(postComment.getTime()).getTime() / StaticMethodsAndFields.MILLISECOND_TO_SECOND;
         text = postComment.getText();
         user = new UserCommentData(postComment.getUserId());
     }

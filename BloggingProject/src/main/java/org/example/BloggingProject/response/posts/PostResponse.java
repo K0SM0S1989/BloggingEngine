@@ -30,7 +30,7 @@ public class PostResponse {
         final int[] likeCount = {0};
         final int[] dislikeCount = {0};
         id = post.getId();
-        timestamp = Timestamp.valueOf(post.getTime()).getTime()/1000;
+        timestamp = Timestamp.valueOf(post.getTime()).getTime()/StaticMethodsAndFields.MILLISECOND_TO_SECOND;
         active = post.getIsActive() == 1;
         user = new UserPostData(post.getUserId());
         title = post.getTitle();

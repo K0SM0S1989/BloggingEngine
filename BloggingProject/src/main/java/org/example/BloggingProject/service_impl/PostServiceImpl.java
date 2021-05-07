@@ -1,11 +1,11 @@
 package org.example.BloggingProject.service_impl;
 
 
-import org.example.BloggingProject.repository.UserRepository;
-import org.example.BloggingProject.requests.posts.PostRequest;
 import org.example.BloggingProject.enums.ModerationStatus;
+import org.example.BloggingProject.exceptions.NotFoundEntity;
 import org.example.BloggingProject.exceptions.old.BadRequestException;
 import org.example.BloggingProject.exceptions.old.EntityNotFoundException;
+import org.example.BloggingProject.mappers.PostRequestMap;
 import org.example.BloggingProject.mappers.PostResponseListMap;
 import org.example.BloggingProject.models.Post;
 import org.example.BloggingProject.models.Tag;
@@ -13,6 +13,9 @@ import org.example.BloggingProject.models.Tags2Posts;
 import org.example.BloggingProject.models.User;
 import org.example.BloggingProject.repository.PostRepository;
 import org.example.BloggingProject.repository.TagRepository;
+import org.example.BloggingProject.repository.UserRepository;
+import org.example.BloggingProject.requests.posts.PostRequest;
+import org.example.BloggingProject.response.PositiveResultResponse;
 import org.example.BloggingProject.response.posts.PostData;
 import org.example.BloggingProject.response.posts.PostResponse;
 import org.example.BloggingProject.response.posts.PostResponseList;
@@ -34,6 +37,9 @@ import java.util.Map;
 
 @Service
 public class PostServiceImpl implements PostService {
+    @Value("${text.notfoundexception}")
+    private String messageNotFound;
+
     private final PostRepository postRepository;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
@@ -84,8 +90,8 @@ public class PostServiceImpl implements PostService {
         LocalDate localDate = LocalDate.parse(date, dtf);
         Page<Post> postList = postRepository.
                 findAllPostsByIsActiveAndModerationStatusByDate(LocalDateTime.now(),
-                localDate,
-                PageRequest.of(offset, limit));
+                        localDate,
+                        PageRequest.of(offset, limit));
         List<PostData> postOutList = new ArrayList<>();
         postList.forEach(post -> postOutList.add(PostResponseListMap.map(post)));
         return ResponseEntity.ok(new PostResponseList(postOutList.size(), postOutList));
@@ -156,27 +162,30 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<PostResponse> getPostsById(int id, Principal principal) throws EntityNotFoundException {
-        Post post = postRepository.findByIdAndIsActiveAndModerationStatusAndTime(id,
-                LocalDateTime.now()).orElseThrow(); //TODO не забыть приделать ИСКЛЮЧЕНИЕ
-        if (principal != null) {
+    public ResponseEntity<PostResponse> getPostsById(int id, Principal principal) throws NotFoundEntity {
+        Post post;
+        if (principal == null) {
+            post = postRepository.findByIdAndIsActiveAndModerationStatusAndTime(id,
+                    LocalDateTime.now()).orElseThrow(() -> new NotFoundEntity(messageNotFound));
+            post.setViewCount(post.getViewCount() + 1);
+            postRepository.save(post);
+        } else {
             User user = userRepository.findUserByEmail(principal.getName()).orElseThrow();
-            if (user.getIsModerator() != 1 && !post.getUserId().equals(user)){
+            post = postRepository.findById(id).orElseThrow(() -> new NotFoundEntity(messageNotFound));
+            if (user.getIsModerator() != 1 && !user.getPostListUser().contains(post)) {
                 post.setViewCount(post.getViewCount() + 1);
                 postRepository.save(post);
             }
-        }
-        else {
-            post.setViewCount(post.getViewCount() + 1);
-            postRepository.save(post);
         }
         return ResponseEntity.ok(new PostResponse(post));
     }
 
     @Override
-    public Map<String, Object> addPost(PostRequest postRequest, User user) {
-        //TODO только при делании анонса
-        return null;
+    public ResponseEntity<PositiveResultResponse> addPost(PostRequest postRequest, Principal principal) {
+        User user = userRepository.findUserByEmail(principal.getName()).orElseThrow();
+        postRepository.save(PostRequestMap.map(postRequest, user));
+        //TODO только при создании анонса delete tags
+        return ResponseEntity.ok(new PositiveResultResponse());
     }
 
     @Override

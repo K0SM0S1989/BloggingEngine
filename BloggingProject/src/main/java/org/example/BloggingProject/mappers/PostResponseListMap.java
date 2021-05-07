@@ -18,7 +18,7 @@ public class PostResponseListMap {
         allPost.setId(post.getId());
         allPost.setTimestamp(Date.from
                 (post.getTime().atZone(ZoneId.systemDefault()).toInstant())
-                .getTime()/1000);
+                .getTime()/StaticMethodsAndFields.MILLISECOND_TO_SECOND);
         User user = post.getUserId();
         UserPostData userForAllPostOut = new UserPostData(user.getId(), user.getName());
 

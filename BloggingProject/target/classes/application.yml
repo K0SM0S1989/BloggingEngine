@@ -19,12 +19,9 @@ blog.email: mail@mail.ru
 blog.copyright: Михаил Артамохин
 blog.copyrightFrom: 2020
 
-date.mili2second: 1000
 
-announce.suka:
-  start: 0
-  finish: 150
-  divide: 3
+text.notfoundexception: Пост не найден
+
 
 upload.path: /home/kosmos/ProgSchool/diploma/BloggingEngine/BloggingProject/uploads
 

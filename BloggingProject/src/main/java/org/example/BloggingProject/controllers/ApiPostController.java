@@ -1,6 +1,9 @@
 package org.example.BloggingProject.controllers;
 
+import org.example.BloggingProject.exceptions.NotFoundEntity;
 import org.example.BloggingProject.exceptions.old.EntityNotFoundException;
+import org.example.BloggingProject.requests.posts.PostRequest;
+import org.example.BloggingProject.response.PositiveResultResponse;
 import org.example.BloggingProject.response.posts.PostResponse;
 import org.example.BloggingProject.response.posts.PostResponseList;
 import org.example.BloggingProject.service.PostService;
@@ -8,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 
 
@@ -70,19 +74,19 @@ public class ApiPostController {
         return postService.getMyPosts(principal, offset, limit, status);
     }
 
-    //
+
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> getPostById(@PathVariable int id, Principal principal) throws EntityNotFoundException {
+    public ResponseEntity<PostResponse> getPostById(@PathVariable int id, Principal principal) throws EntityNotFoundException, NotFoundEntity {
         return postService.getPostsById(id, principal);
     }
-//
-//    // @PreAuthorize(value = "hasAuthority('MODERATOR') or hasAuthority('USER')")
-//    @PostMapping
-//    public Map<String, Object> addPost(@RequestBody
-//                                       @Valid PostDTO postDTO) {
-//
-//        return postService.addPost(postDTO, user);
-//    }
+
+
+    @PreAuthorize(value = "hasAuthority('MODERATOR') or hasAuthority('USER')")
+    @PostMapping
+    public ResponseEntity<PositiveResultResponse> addPost(@RequestBody @Valid PostRequest postRequest,
+                                                          Principal principal) {
+        return postService.addPost(postRequest, principal);
+    }
 //
 //    @PutMapping("/{id}")
 //    public Map<String, Object> updatePost(@PathVariable int id,@RequestBody @Valid PostDTO postDTO) throws EntityNotFoundException, BadRequestException {

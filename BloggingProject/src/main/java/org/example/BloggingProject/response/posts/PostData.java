@@ -29,7 +29,6 @@ public class PostData {
 //        System.out.println(divideText);
 
 
-
         if (text.length() > StaticMethodsAndFields.FINISH_SYMBOL_ANNOUNCE) {
             this.announce = text.substring(StaticMethodsAndFields.START_SYMBOL_ANNOUNCE,
                     StaticMethodsAndFields.FINISH_SYMBOL_ANNOUNCE) + "...";

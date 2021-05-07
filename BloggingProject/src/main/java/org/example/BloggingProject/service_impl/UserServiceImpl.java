@@ -37,49 +37,49 @@ public class UserServiceImpl implements UserService {
 //        return new BlogUserDetails(blogUser);
 //    }
 
-    @Override
-    public String addPhoto(User user, MultipartFile file) throws IOException, BadRequestException {
-
-
-        if (file != null) {
-            int point = Objects.requireNonNull(file.getOriginalFilename()).lastIndexOf('.') + 1;
-            String fileFormat = file.getOriginalFilename().substring(point);
-            long weight = file.getSize();
-
-            if (fileFormat.equals("png") || fileFormat.equals("jpg") || fileFormat.equals("jpeg")) {
-                if (weight <= 2097152) {
-                    String uuidFile = UUID.randomUUID().toString();
-                    String finalPathForPhoto = pathGenerate(uuidFile);
-                    File uploadDir = new File(uploadPath + "/" + finalPathForPhoto);
-                    uploadDir.mkdirs();
-
-                    File newFile = new File(uploadPath + "/" + finalPathForPhoto + "/" + file.getOriginalFilename());
-                    file.transferTo(newFile);
-                    String userPhotoAddress = "/img/" + finalPathForPhoto + "/" + file.getOriginalFilename();
-
-                    user.setPhoto(userPhotoAddress);
-                    userRepository.save(user);
-
-                    return userPhotoAddress;
-                } else {
-                    Map<String, String> errors = new HashMap<>();
-                    errors.put("image", "Размер файла превышает допустимый");
-                    throw BadRequestException.createWith(false, errors);
-                }
-
-
-            } else {
-                Map<String, String> errors = new HashMap<>();
-                errors.put("image", "Неверный формат файла");
-                throw BadRequestException.createWith(false, errors);
-            }
-
-        } else {
-            Map<String, String> errors = new HashMap<>();
-            errors.put("image", "Файл не загружен");
-            throw BadRequestException.createWith(false, errors);
-        }
-    }
+//    @Override
+//    public String addPhoto(User user, MultipartFile file) throws IOException, BadRequestException {
+//
+//
+//        if (file != null) {
+//            int point = Objects.requireNonNull(file.getOriginalFilename()).lastIndexOf('.') + 1;
+//            String fileFormat = file.getOriginalFilename().substring(point);
+//            long weight = file.getSize();
+//
+//            if (fileFormat.equals("png") || fileFormat.equals("jpg") || fileFormat.equals("jpeg")) {
+//                if (weight <= 2097152) {
+//                    String uuidFile = UUID.randomUUID().toString();
+//                    String finalPathForPhoto = pathGenerate(uuidFile);
+//                    File uploadDir = new File(uploadPath + "/" + finalPathForPhoto);
+//                    uploadDir.mkdirs();
+//
+//                    File newFile = new File(uploadPath + "/" + finalPathForPhoto + "/" + file.getOriginalFilename());
+//                    file.transferTo(newFile);
+//                    String userPhotoAddress = "/img/" + finalPathForPhoto + "/" + file.getOriginalFilename();
+//
+//                    user.setPhoto(userPhotoAddress);
+//                    userRepository.save(user);
+//
+//                    return userPhotoAddress;
+//                } else {
+//                    Map<String, String> errors = new HashMap<>();
+//                    errors.put("image", "Размер файла превышает допустимый");
+//                    throw BadRequestException.createWith(false, errors);
+//                }
+//
+//
+//            } else {
+//                Map<String, String> errors = new HashMap<>();
+//                errors.put("image", "Неверный формат файла");
+//                throw BadRequestException.createWith(false, errors);
+//            }
+//
+//        } else {
+//            Map<String, String> errors = new HashMap<>();
+//            errors.put("image", "Файл не загружен");
+//            throw BadRequestException.createWith(false, errors);
+//        }
+//    }
 
     private String pathGenerate(String uuidFile) {
 
@@ -94,4 +94,8 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
+    public String addPhoto(User user, MultipartFile file) throws IOException, BadRequestException {
+        return null;
+    }
 }
