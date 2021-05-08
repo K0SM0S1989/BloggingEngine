@@ -3,7 +3,6 @@ package org.example.BloggingProject.service;
 import org.example.BloggingProject.exceptions.BadRequestException;
 import org.example.BloggingProject.exceptions.NotFoundException;
 import org.example.BloggingProject.requests.posts.PostRequest;
-import org.example.BloggingProject.exceptions.old.EntityNotFoundException;
 import org.example.BloggingProject.response.PositiveResultResponse;
 import org.example.BloggingProject.response.posts.PostResponse;
 import org.example.BloggingProject.response.posts.PostResponseList;
@@ -26,7 +25,7 @@ public interface PostService {
 
     ResponseEntity<PostResponseList> getMyPosts(Principal principal, int offset, int limit, String status);
 
-    ResponseEntity<PostResponse> getPostsById(int id, Principal principal) throws EntityNotFoundException, NotFoundException;
+    ResponseEntity<PostResponse> getPostsById(int id, Principal principal) throws NotFoundException;
 
     ResponseEntity<PositiveResultResponse> addPost(PostRequest postRequest, Principal principal) throws BadRequestException;
 

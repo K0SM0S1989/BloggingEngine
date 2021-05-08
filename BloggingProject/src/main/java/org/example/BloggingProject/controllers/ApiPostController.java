@@ -2,7 +2,6 @@ package org.example.BloggingProject.controllers;
 
 import org.example.BloggingProject.exceptions.BadRequestException;
 import org.example.BloggingProject.exceptions.NotFoundException;
-import org.example.BloggingProject.exceptions.old.EntityNotFoundException;
 import org.example.BloggingProject.requests.posts.PostRequest;
 import org.example.BloggingProject.response.PositiveResultResponse;
 import org.example.BloggingProject.response.posts.PostResponse;
@@ -77,7 +76,7 @@ public class ApiPostController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> getPostById(@PathVariable int id, Principal principal) throws EntityNotFoundException, NotFoundException {
+    public ResponseEntity<PostResponse> getPostById(@PathVariable int id, Principal principal) throws NotFoundException {
         return postService.getPostsById(id, principal);
     }
 
