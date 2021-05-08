@@ -1,11 +1,13 @@
 package org.example.BloggingProject.exceptions;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ShortTextAndTitle {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ShortTextAndTitle implements ErrorsInterface{
     private String text;
     private String title;
 

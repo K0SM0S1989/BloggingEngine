@@ -1,6 +1,7 @@
 package org.example.BloggingProject.controllers;
 
-import org.example.BloggingProject.exceptions.NotFoundEntity;
+import org.example.BloggingProject.exceptions.BadRequestException;
+import org.example.BloggingProject.exceptions.NotFoundException;
 import org.example.BloggingProject.exceptions.old.EntityNotFoundException;
 import org.example.BloggingProject.requests.posts.PostRequest;
 import org.example.BloggingProject.response.PositiveResultResponse;
@@ -52,7 +53,7 @@ public class ApiPostController {
     @GetMapping("/byTag")
     public ResponseEntity<PostResponseList> getByTag(@RequestParam("tag") String tag,
                                                      @RequestParam("offset") int offset,
-                                                     @RequestParam("limit") int limit) throws NotFoundEntity {
+                                                     @RequestParam("limit") int limit) throws NotFoundException {
         return postService.getByTag(tag, offset, limit);
     }
 
@@ -76,7 +77,7 @@ public class ApiPostController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> getPostById(@PathVariable int id, Principal principal) throws EntityNotFoundException, NotFoundEntity {
+    public ResponseEntity<PostResponse> getPostById(@PathVariable int id, Principal principal) throws EntityNotFoundException, NotFoundException {
         return postService.getPostsById(id, principal);
     }
 
@@ -84,15 +85,17 @@ public class ApiPostController {
     @PreAuthorize(value = "hasAuthority('MODERATOR') or hasAuthority('USER')")
     @PostMapping
     public ResponseEntity<PositiveResultResponse> addPost(@RequestBody @Valid PostRequest postRequest,
-                                                          Principal principal) {
+                                                          Principal principal) throws BadRequestException {
         return postService.addPost(postRequest, principal);
     }
-//
-//    @PutMapping("/{id}")
-//    public Map<String, Object> updatePost(@PathVariable int id,@RequestBody @Valid PostDTO postDTO) throws EntityNotFoundException, BadRequestException {
-//
-//        return postService.updatePost(id, postDTO, user);
-//    }
+
+    @PreAuthorize(value = "hasAuthority('MODERATOR') or hasAuthority('USER')")
+    @PutMapping("/{id}")
+    public ResponseEntity<PositiveResultResponse> updatePost(@PathVariable int id,
+                                                             @RequestBody @Valid PostRequest postRequest,
+                                                             Principal principal) {
+        return postService.updatePost(id, postRequest, principal);
+    }
 
 
 }

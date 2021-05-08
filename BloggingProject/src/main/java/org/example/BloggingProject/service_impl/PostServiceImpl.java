@@ -2,9 +2,8 @@ package org.example.BloggingProject.service_impl;
 
 
 import org.example.BloggingProject.enums.ModerationStatus;
-import org.example.BloggingProject.exceptions.NotFoundEntity;
-import org.example.BloggingProject.exceptions.old.BadRequestException;
-import org.example.BloggingProject.exceptions.old.EntityNotFoundException;
+import org.example.BloggingProject.exceptions.BadRequestException;
+import org.example.BloggingProject.exceptions.NotFoundException;
 import org.example.BloggingProject.mappers.PostRequestMap;
 import org.example.BloggingProject.mappers.PostResponseListMap;
 import org.example.BloggingProject.models.Post;
@@ -98,8 +97,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<PostResponseList> getByTag(String tagName, int offset, int limit) throws NotFoundEntity {
-        Tag tag = tagRepository.findByName(tagName).orElseThrow(() -> new NotFoundEntity(messageNotFound));
+    public ResponseEntity<PostResponseList> getByTag(String tagName, int offset, int limit) throws NotFoundException {
+        Tag tag = tagRepository.findByName(tagName).orElseThrow(() -> new NotFoundException(messageNotFound));
         List<PostData> postOutList = new ArrayList<>();
         if (tag != null) {
             List<Tags2Posts> tags2PostsList = tag.getTags2PostsList();
@@ -162,15 +161,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<PostResponse> getPostsById(int id, Principal principal) throws NotFoundEntity {
+    public ResponseEntity<PostResponse> getPostsById(int id, Principal principal) throws NotFoundException {
         Post post;
         if (principal == null) {
             post = postRepository.findByIdAndIsActiveAndModerationStatusAndTime(id,
-                    LocalDateTime.now()).orElseThrow(() -> new NotFoundEntity(messageNotFound));
+                    LocalDateTime.now()).orElseThrow(() -> new NotFoundException(messageNotFound));
             postRepository.save(post);
         } else {
             User user = userRepository.findUserByEmail(principal.getName()).orElseThrow();
-            post = postRepository.findById(id).orElseThrow(() -> new NotFoundEntity(messageNotFound));
+            post = postRepository.findById(id).orElseThrow(() -> new NotFoundException(messageNotFound));
             if (user.getIsModerator() != 1 && !user.getPostListUser().contains(post)) {
                 post.setViewCount(post.getViewCount() + 1);
                 postRepository.save(post);
@@ -180,18 +179,21 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<PositiveResultResponse> addPost(PostRequest postRequest, Principal principal) {
-        User user = userRepository.findUserByEmail(principal.getName()).orElseThrow();
-        Post post = PostRequestMap.map(postRequest, user);
-        postRepository.save(post);
-        if (!postRequest.getTags().isEmpty()) {
-            addTag2Post(post, postRequest);
-        }
-        return ResponseEntity.ok(new PositiveResultResponse());
+    public ResponseEntity<PositiveResultResponse> addPost(PostRequest postRequest, Principal principal) throws BadRequestException {
+       if (postRequest.getTitle().length() > 3 && postRequest.getText().length() >50){
+           User user = userRepository.findUserByEmail(principal.getName()).orElseThrow();
+           Post post = PostRequestMap.map(postRequest, user);
+           postRepository.save(post);
+           if (!postRequest.getTags().isEmpty()) {
+               addTag2Post(post, postRequest);
+           }
+           return ResponseEntity.ok(new PositiveResultResponse());
+       } else throw new BadRequestException(postRequest.getText(), postRequest.getTitle());
+
     }
 
     @Override
-    public Map<String, Object> updatePost(int id, PostRequest postRequest, User user) throws EntityNotFoundException, BadRequestException {
+    public ResponseEntity<PositiveResultResponse> updatePost(int id, PostRequest postRequest, Principal principal){
         return null;
     }
 
