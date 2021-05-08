@@ -52,7 +52,7 @@ public class ApiPostController {
     @GetMapping("/byTag")
     public ResponseEntity<PostResponseList> getByTag(@RequestParam("tag") String tag,
                                                      @RequestParam("offset") int offset,
-                                                     @RequestParam("limit") int limit) {
+                                                     @RequestParam("limit") int limit) throws NotFoundEntity {
         return postService.getByTag(tag, offset, limit);
     }
 

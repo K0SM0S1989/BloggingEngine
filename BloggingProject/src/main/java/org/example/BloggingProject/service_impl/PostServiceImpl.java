@@ -13,6 +13,7 @@ import org.example.BloggingProject.models.Tags2Posts;
 import org.example.BloggingProject.models.User;
 import org.example.BloggingProject.repository.PostRepository;
 import org.example.BloggingProject.repository.TagRepository;
+import org.example.BloggingProject.repository.Tags2PostsRepository;
 import org.example.BloggingProject.repository.UserRepository;
 import org.example.BloggingProject.requests.posts.PostRequest;
 import org.example.BloggingProject.response.PositiveResultResponse;
@@ -30,10 +31,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -43,11 +41,13 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
+    private final Tags2PostsRepository tags2PostsRepository;
 
-    public PostServiceImpl(PostRepository postRepository, TagRepository tagRepository, UserRepository userRepository) {
+    public PostServiceImpl(PostRepository postRepository, TagRepository tagRepository, UserRepository userRepository, Tags2PostsRepository tags2PostsRepository) {
         this.postRepository = postRepository;
         this.tagRepository = tagRepository;
         this.userRepository = userRepository;
+        this.tags2PostsRepository = tags2PostsRepository;
     }
 
     @Override
@@ -98,8 +98,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ResponseEntity<PostResponseList> getByTag(String tagName, int offset, int limit) {
-        Tag tag = tagRepository.findByName(tagName);
+    public ResponseEntity<PostResponseList> getByTag(String tagName, int offset, int limit) throws NotFoundEntity {
+        Tag tag = tagRepository.findByName(tagName).orElseThrow(() -> new NotFoundEntity(messageNotFound));
         List<PostData> postOutList = new ArrayList<>();
         if (tag != null) {
             List<Tags2Posts> tags2PostsList = tag.getTags2PostsList();
@@ -167,7 +167,6 @@ public class PostServiceImpl implements PostService {
         if (principal == null) {
             post = postRepository.findByIdAndIsActiveAndModerationStatusAndTime(id,
                     LocalDateTime.now()).orElseThrow(() -> new NotFoundEntity(messageNotFound));
-            post.setViewCount(post.getViewCount() + 1);
             postRepository.save(post);
         } else {
             User user = userRepository.findUserByEmail(principal.getName()).orElseThrow();
@@ -183,8 +182,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public ResponseEntity<PositiveResultResponse> addPost(PostRequest postRequest, Principal principal) {
         User user = userRepository.findUserByEmail(principal.getName()).orElseThrow();
-        postRepository.save(PostRequestMap.map(postRequest, user));
-        //TODO только при создании анонса delete tags
+        Post post = PostRequestMap.map(postRequest, user);
+        postRepository.save(post);
+        if (!postRequest.getTags().isEmpty()) {
+            addTag2Post(post, postRequest);
+        }
         return ResponseEntity.ok(new PositiveResultResponse());
     }
 
@@ -198,5 +200,25 @@ public class PostServiceImpl implements PostService {
         return post.getIsActive() == 1
                 && post.getModerationStatus().equals(ModerationStatus.ACCEPTED)
                 && post.getTime().isBefore(currentTime);
+    }
+
+    private void addTag2Post(Post post, PostRequest postRequest) {
+        postRequest.getTags().forEach(tagName -> {
+            Optional<Tag> tagOptional = tagRepository.findByName(tagName);
+            if (tagOptional.isPresent()) {
+                Tags2Posts tags2Posts = new Tags2Posts();
+                tags2Posts.setPostId(post);
+                tags2Posts.setTagId(tagOptional.orElseThrow());
+                tags2PostsRepository.save(tags2Posts);
+            } else {
+                Tag tag = new Tag();
+                tag.setName(tagName);
+                tagRepository.save(tag);
+                Tags2Posts tags2Posts = new Tags2Posts();
+                tags2Posts.setPostId(post);
+                tags2Posts.setTagId(tag);
+                tags2PostsRepository.save(tags2Posts);
+            }
+        });
     }
 }

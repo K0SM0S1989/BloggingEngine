@@ -1,10 +1,14 @@
 package org.example.BloggingProject.requests.posts;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PostRequest {
     private long timestamp;
     private int active;

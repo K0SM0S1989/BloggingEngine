@@ -18,21 +18,16 @@ public class PostData {
     int commentCount;
     int viewCount;
 
-
+    /**
+     * очистка текста от тегов и вывод короткого анонса
+     * @param text
+     */
     public void setAnnounce(String text) {
-
-//        String freeHtmlTags = Html.fromHtml(text).toString();
-//        int start = (int)"${announce.start}";
         String freeHtmlTags = Jsoup.parse(text).text();
-//        System.out.println(startTextForAnnounce);
-//        System.out.println(finish);
-//        System.out.println(divideText);
-
-
         if (text.length() > StaticMethodsAndFields.FINISH_SYMBOL_ANNOUNCE) {
-            this.announce = text.substring(StaticMethodsAndFields.START_SYMBOL_ANNOUNCE,
+            this.announce = freeHtmlTags.substring(StaticMethodsAndFields.START_SYMBOL_ANNOUNCE,
                     StaticMethodsAndFields.FINISH_SYMBOL_ANNOUNCE) + "...";
-        } else this.announce = text.substring(StaticMethodsAndFields.START_SYMBOL_ANNOUNCE,
+        } else this.announce = freeHtmlTags.substring(StaticMethodsAndFields.START_SYMBOL_ANNOUNCE,
                 StaticMethodsAndFields.FINISH_SYMBOL_ANNOUNCE / StaticMethodsAndFields.DIVIDE_SHORT_TEXT) +
                 "...";
     }

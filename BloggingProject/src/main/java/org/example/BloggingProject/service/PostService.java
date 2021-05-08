@@ -22,7 +22,7 @@ public interface PostService {
 
     ResponseEntity<PostResponseList> getByDate(String date, int offset, int limit);
 
-    ResponseEntity<PostResponseList> getByTag(String tag, int offset, int limit);
+    ResponseEntity<PostResponseList> getByTag(String tag, int offset, int limit) throws NotFoundEntity;
 
     ResponseEntity<PostResponseList> getForModeration(Principal principal, int offset, int limit, String status);
 
