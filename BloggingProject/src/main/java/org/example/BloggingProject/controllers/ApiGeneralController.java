@@ -1,26 +1,26 @@
 package org.example.BloggingProject.controllers;
 
 
+import lombok.SneakyThrows;
 import org.example.BloggingProject.response.InitResponse;
 import org.example.BloggingProject.response.SettingsResponse;
 import org.example.BloggingProject.service.GlobalSettingsService;
-import org.example.BloggingProject.service.UserService;
+import org.example.BloggingProject.service.StorageService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
 @RequestMapping(value = "/api")
 public class ApiGeneralController {
 
-    //security прикрутишь
-
-    private final UserService userService;
+    private final StorageService storageService;
     private final InitResponse initResponse;
     private final GlobalSettingsService globalSettingsService;
 
-    public ApiGeneralController(UserService userService, InitResponse initResponse, GlobalSettingsService globalSettingsService) {
-
-        this.userService = userService;
+    public ApiGeneralController(StorageService storageService, InitResponse initResponse, GlobalSettingsService globalSettingsService) {
+        this.storageService = storageService;
         this.initResponse = initResponse;
         this.globalSettingsService = globalSettingsService;
     }
@@ -41,22 +41,12 @@ public class ApiGeneralController {
         return null;
     }
 
-//    @SneakyThrows
-//    @PostMapping("/image")
-//    public String addPhoto(@RequestParam MultipartFile image) throws BadRequestException {
-//
-//
-//        return userService.addPhoto(user, image);
-//    }
+    @PreAuthorize(value = "hasAuthority('MODERATOR') or hasAuthority('USER')")
+    @SneakyThrows
+    @PostMapping("/image")
+    public String addPhoto(@RequestParam MultipartFile image) {
+        return storageService.addPhoto(image);
+    }
 
 
-
-
-//    private User createUserOrMod(int i) {
-//        User user;
-//        if (i == 1) {
-//            user = userRepository.findById(1).orElseThrow();
-//        } else user = userRepository.findById(2).orElseThrow();
-//        return user;
-//    }
 }

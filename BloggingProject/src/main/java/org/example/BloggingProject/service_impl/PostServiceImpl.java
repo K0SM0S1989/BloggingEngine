@@ -180,21 +180,30 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public ResponseEntity<PositiveResultResponse> addPost(PostRequest postRequest, Principal principal) throws BadRequestException {
-       if (postRequest.getTitle().length() > 3 && postRequest.getText().length() >50){
-           User user = userRepository.findUserByEmail(principal.getName()).orElseThrow();
-           Post post = PostRequestMap.map(postRequest, user);
-           postRepository.save(post);
-           if (!postRequest.getTags().isEmpty()) {
-               addTag2Post(post, postRequest);
-           }
-           return ResponseEntity.ok(new PositiveResultResponse());
-       } else throw new BadRequestException(postRequest.getText(), postRequest.getTitle());
+        if (postRequest.getTitle().length() > 3 && postRequest.getText().length() > 50) {
+            User user = userRepository.findUserByEmail(principal.getName()).orElseThrow();
+            Post post = PostRequestMap.map(postRequest, user);
+            postRepository.save(post);
+            if (!postRequest.getTags().isEmpty()) {
+                updateOrAddTags2Post(post, postRequest, false);
+            }
+            return ResponseEntity.ok(new PositiveResultResponse());
+        } else throw new BadRequestException(postRequest.getText(), postRequest.getTitle());
 
     }
 
     @Override
-    public ResponseEntity<PositiveResultResponse> updatePost(int id, PostRequest postRequest, Principal principal){
-        return null;
+    public ResponseEntity<PositiveResultResponse> updatePost(int id, PostRequest postRequest, Principal principal) throws NotFoundException, BadRequestException {
+        Post post = postRepository.findById(id).orElseThrow(() -> new NotFoundException(messageNotFound));
+        if (postRequest.getTitle().length() > 3 && postRequest.getText().length() > 50) {
+            User user = userRepository.findUserByEmail(principal.getName()).orElseThrow();
+            PostRequestMap.updatePost(post, postRequest, user);
+            postRepository.save(post);
+            updateOrAddTags2Post(post, postRequest, true);
+            return ResponseEntity.ok(new PositiveResultResponse());
+        } else throw new BadRequestException(postRequest.getText(), postRequest.getTitle());
+
+
     }
 
     private boolean isCorrect(Post post) {
@@ -204,7 +213,11 @@ public class PostServiceImpl implements PostService {
                 && post.getTime().isBefore(currentTime);
     }
 
-    private void addTag2Post(Post post, PostRequest postRequest) {
+
+    private void updateOrAddTags2Post(Post post, PostRequest postRequest, boolean isUpdate) {
+        if (isUpdate){
+            tags2PostsRepository.deleteAll(post.getTags2PostsList());
+        }
         postRequest.getTags().forEach(tagName -> {
             Optional<Tag> tagOptional = tagRepository.findByName(tagName);
             if (tagOptional.isPresent()) {

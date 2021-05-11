@@ -6,8 +6,7 @@ import org.example.BloggingProject.models.User;
 import org.example.BloggingProject.response.posts.PostData;
 import org.example.BloggingProject.response.users.UserPostData;
 
-import java.sql.Date;
-import java.time.ZoneId;
+import java.sql.Timestamp;
 
 public class PostResponseListMap {
 
@@ -16,9 +15,9 @@ public class PostResponseListMap {
         final int[] dislikeCount = {0};
         PostData allPost = new PostData();
         allPost.setId(post.getId());
-        allPost.setTimestamp(Date.from
-                (post.getTime().atZone(ZoneId.systemDefault()).toInstant())
-                .getTime()/StaticMethodsAndFields.MILLISECOND_TO_SECOND);
+        allPost.setTimestamp(Timestamp.
+                valueOf(post.getTime())
+                .getTime() / StaticMethodsAndFields.MILLISECOND_TO_SECOND);
         User user = post.getUserId();
         UserPostData userForAllPostOut = new UserPostData(user.getId(), user.getName());
 

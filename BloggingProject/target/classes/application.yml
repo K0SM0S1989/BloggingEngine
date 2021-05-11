@@ -21,6 +21,7 @@ blog.copyrightFrom: 2020
 
 
 text.notfoundexception: Пост не найден
+weight.file.max: 2097152
 
 
 upload.path: /home/kosmos/ProgSchool/diploma/BloggingEngine/BloggingProject/uploads

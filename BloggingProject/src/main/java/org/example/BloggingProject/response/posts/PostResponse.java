@@ -26,11 +26,11 @@ public class PostResponse {
     private List<CommentData> comments;
     private List<String> tags;
 
-    public PostResponse(Post post){
+    public PostResponse(Post post) {
         final int[] likeCount = {0};
         final int[] dislikeCount = {0};
         id = post.getId();
-        timestamp = Timestamp.valueOf(post.getTime()).getTime()/StaticMethodsAndFields.MILLISECOND_TO_SECOND;
+        timestamp = Timestamp.valueOf(post.getTime()).getTime() / StaticMethodsAndFields.MILLISECOND_TO_SECOND;
         active = post.getIsActive() == 1;
         user = new UserPostData(post.getUserId());
         title = post.getTitle();

@@ -1,21 +1,14 @@
 package org.example.BloggingProject.service_impl;
 
 
-import org.example.BloggingProject.exceptions.old.BadRequestException;
 import org.example.BloggingProject.models.User;
 import org.example.BloggingProject.repository.UserRepository;
-//import org.example.BloggingProject.security.BlogUserDetails;
 import org.example.BloggingProject.service.UserService;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.core.userdetails.UserDetailsService;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -89,13 +82,12 @@ public class UserServiceImpl implements UserService {
         firstDir = uuidFile.substring(0, uuidFile.length() / 4);
         secondDir = uuidFile.substring(uuidFile.length() / 4, uuidFile.length() / 2);
         thirdDir = uuidFile.substring(uuidFile.length() / 2, uuidFile.length() * 3 / 4);
-//        return uploadPath + firstDir + "/" + secondDir + "/" + thirdDir;
         return firstDir + "/" + secondDir + "/" + thirdDir;
     }
 
 
     @Override
-    public String addPhoto(User user, MultipartFile file) throws IOException, BadRequestException {
+    public String addPhoto(User user, MultipartFile file) throws IOException {
         return null;
     }
 }

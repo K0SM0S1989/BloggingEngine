@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ImageError implements ErrorsInterface{
+public class ImageError implements ErrorsInterface {
     private String image;
-
 }

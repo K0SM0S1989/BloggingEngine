@@ -29,7 +29,7 @@ public interface PostService {
 
     ResponseEntity<PositiveResultResponse> addPost(PostRequest postRequest, Principal principal) throws BadRequestException;
 
-    ResponseEntity<PositiveResultResponse> updatePost(int id, PostRequest postRequest, Principal principal);
+    ResponseEntity<PositiveResultResponse> updatePost(int id, PostRequest postRequest, Principal principal) throws NotFoundException, BadRequestException;
 
 
 

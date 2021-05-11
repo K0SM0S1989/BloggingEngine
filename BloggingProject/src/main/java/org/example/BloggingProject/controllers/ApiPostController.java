@@ -92,7 +92,7 @@ public class ApiPostController {
     @PutMapping("/{id}")
     public ResponseEntity<PositiveResultResponse> updatePost(@PathVariable int id,
                                                              @RequestBody @Valid PostRequest postRequest,
-                                                             Principal principal) {
+                                                             Principal principal) throws NotFoundException, BadRequestException {
         return postService.updatePost(id, postRequest, principal);
     }
 
